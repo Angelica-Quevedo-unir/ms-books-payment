@@ -19,52 +19,51 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(PaymentCancellationException.class)
     public ResponseEntity<Object> handlePaymentCancellationException(PaymentCancellationException ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleJsonParseException(HttpMessageNotReadableException ex, WebRequest request) {
         String rootCauseMessage = getRootCauseMessage(ex);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid JSON input: " + rootCauseMessage, getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid JSON input: " + rootCauseMessage);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
     }
 
     @ExceptionHandler(StockUpdateException.class)
     public ResponseEntity<Object> handleStockUpdateException(StockUpdateException ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(FeignException.BadRequest.class)
     public ResponseEntity<Object> handleFeignBadRequestException(FeignException.BadRequest ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid request to book service: " + ex.contentUTF8(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid request to book service: " + ex.contentUTF8());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + ex.getMessage(), getStackTrace(ex));
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + ex.getMessage());
     }
 
-    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message, String stackTrace) {
+    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         body.put("message", message);
-        body.put("stackTrace", stackTrace);  // Incluimos la traza aquí
         return new ResponseEntity<>(body, status);
     }
 
@@ -76,10 +75,4 @@ public class GlobalExceptionHandler {
         return rootCause.getMessage();
     }
 
-    private String getStackTrace(Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        throwable.printStackTrace(pw);
-        return sw.toString();
-    }
 }

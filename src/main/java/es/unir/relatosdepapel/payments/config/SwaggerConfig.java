@@ -18,6 +18,9 @@ public class SwaggerConfig {
     @Value("${server.port.gateway:80}")
     private String serverPort;
 
+    /**
+     * Configuración de OpenAPI con el servidor dinámico
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         String baseUrl = "http://" + gatewayHostname + ":" + serverPort;

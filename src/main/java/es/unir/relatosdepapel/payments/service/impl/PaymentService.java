@@ -61,6 +61,18 @@ public class PaymentService implements IPaymentService {
         updatePaymentStatusToCancelled(payment);
     }
 
+    @Override
+    public void deletePayment(Long paymentId) {
+           validatePaymentExists(paymentId);
+            paymentRepository.deleteById(paymentId);
+        }
+
+    private void validatePaymentExists(Long id) {
+        if (!paymentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Payment with ID " + id + " not found");
+        }
+    }
+
     private List<PaymentItem> createPaymentItems(PaymentRequestDTO request) {
         return request.getItems().stream()
                 .map(item -> new PaymentItem(item.getBookIsbn(), item.getQuantity(), fetchBookPrice(item.getBookIsbn())))

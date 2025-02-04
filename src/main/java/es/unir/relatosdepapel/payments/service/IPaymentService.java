@@ -29,4 +29,11 @@ public interface IPaymentService {
      * @param paymentId The ID of the payment to cancel.
      */
     void cancelPayment(Long paymentId);
+
+    /**
+     * Delete a payment by its ID.
+     *
+     * @param paymentId The ID of the payment to delete.
+     */
+    void deletePayment(Long paymentId);
 }

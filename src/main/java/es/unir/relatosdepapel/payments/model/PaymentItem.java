@@ -28,7 +28,6 @@ public class PaymentItem {
     @Column(name = "price_per_unit",nullable = false)
     private Double pricePerUnit;
 
-    // Constructor necesario para el builder
     public PaymentItem(String bookIsbn, Integer quantity, Double pricePerUnit) {
         this.bookIsbn = bookIsbn;
         this.quantity = quantity;

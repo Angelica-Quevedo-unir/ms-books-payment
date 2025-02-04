@@ -50,9 +50,17 @@ public class PaymentController {
 
     @Operation(summary = "Cancel payment by payment ID", description = "Cancel a payment")
     @ApiResponse(responseCode = "204", description = "Payment cancelled successfully")
-    @DeleteMapping("/{paymentId}")
+    @PatchMapping("/{paymentId}")
     public ResponseEntity<Void> cancelPayment(@PathVariable Long paymentId) {
         paymentService.cancelPayment(paymentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Delete payment by payment ID", description = "Delete a payment from the system")
+    @ApiResponse(responseCode = "204", description = "Payment deleted successfully")
+    @DeleteMapping("/{paymentId}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId) {
+        paymentService.deletePayment(paymentId);
         return ResponseEntity.noContent().build();
     }
 }
