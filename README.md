@@ -11,6 +11,29 @@ El microservicio **ms-books-payments** es el componente central encargado de ges
 Este microservicio está diseñado siguiendo los principios de **REST** y emplea **HATEOAS** (Hypermedia as the Engine of Application State) para enriquecer las respuestas de la API.
 
 ---
+## **Estructura del Proyecto**
+El proyecto sigue una arquitectura basada en capas para garantizar la separación de responsabilidades. A continuación, se detalla la estructura del proyecto:
+
+ms-books-payments
+```
+📁 src
+├── 📁 main
+│   ├── 📁 java
+│   │   └── 📁 es.unir.relatosdepapel.books
+│   │       ├── 📁 controller       # Controladores REST o de API
+│   │       ├── 📁 model            # Entidades JPA o modelos de datos
+│   │       ├── 📁 repository       # Repositorios JPA o interfaces de acceso a datos
+│   │       ├── 📁 service          # Lógica de negocio y servicios
+│   │       ├── 📁 hateoas          # Configuración y ensambladores HATEOAS
+│   │       ├── 📁 dto              # Objetos de transferencia de datos
+│   │       ├── 📁 config           # Configuración de la aplicación (Beans, seguridad, etc.)
+│   │       └── 📁 exception        # Manejo de excepciones personalizadas
+│   └── 📁 resources
+│       └── 📄 application.properties  # Configuración de la aplicación
+├── 📁 test
+│   ├── 📁 java                     # Clases de pruebas unitarias y de integración
+│   └── 📁 resources                # Archivos de configuración de prueba
+```
 
 ## **Arquitectura de la Aplicación**
 
