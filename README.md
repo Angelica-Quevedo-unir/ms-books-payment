@@ -50,7 +50,7 @@ Este servicio contiene la lógica de negocio relacionada con la gestión de los 
 El microservicio utiliza **Swagger UI** para documentar y probar la API de manera interactiva. Puedes acceder a la interfaz de Swagger en la siguiente URL una vez que el microservicio esté en ejecución:
 
 ```
-http://${HOST}/swagger-ui.html
+http://${HOST}/book-payments/swagger-ui/index.html#
 ```
 ### **Imagen de Swagger UI**
 A continuación, se muestra una captura de pantalla de la interfaz de Swagger UI:
