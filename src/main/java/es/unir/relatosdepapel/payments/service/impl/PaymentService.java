@@ -121,6 +121,7 @@ public class PaymentService implements IPaymentService {
         request.getItems().forEach(item -> {
             try {
                 BookAvailabilityResponseDTO response = bookCatalogueExternalService.checkBookAvailability(item.getBookIsbn(), item.getQuantity());
+
                 if (!response.isAvailable()) {
                     throw new InsufficientStockException(
                             String.format("Not enough stock for ISBN %s. Requested: %d, Available: %d",
@@ -129,11 +130,14 @@ public class PaymentService implements IPaymentService {
                 }
             } catch (FeignException.BadRequest e) {
                 throw new RuntimeException("Error 400 during stock validation: " + e.contentUTF8(), e);
+            } catch (InsufficientStockException e) {
+                throw e;
             } catch (Exception e) {
                 throw new RuntimeException("Unexpected error during stock validation for ISBN " + item.getBookIsbn(), e);
             }
         });
     }
+
 
     private Double fetchBookPrice(String bookIsbn) {
         try {

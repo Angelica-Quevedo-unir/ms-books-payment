@@ -37,7 +37,10 @@ public class GlobalExceptionHandler {
         String rootCauseMessage = getRootCauseMessage(ex);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid JSON input: " + rootCauseMessage);
     }
-
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<Object> handleInsufficientStockException(InsufficientStockException ex, WebRequest request) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
