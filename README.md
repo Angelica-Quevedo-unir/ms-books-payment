@@ -137,38 +137,38 @@ Para que el microservicio **ms-books-payments** funcione correctamente, es neces
 
 ### **1. Creación de la tabla `payments`**
 ```sql
-CREATE TABLE `payments` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_id` VARCHAR(255) NOT NULL,
-  `total_amount` DOUBLE NOT NULL,
-  `status` ENUM('PENDING','COMPLETED','CANCELLED') DEFAULT 'PENDING',
-  `payment_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `idx_payments_user_id` (`user_id`),
-  CONSTRAINT `chk_total_amount` CHECK ((`total_amount` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status ENUM('PENDING', 'COMPLETED', 'CANCELLED') DEFAULT 'PENDING',
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT chk_total_amount CHECK (total_amount > 0)
+);
+
+-- Índice para buscar rápidamente pagos por usuario
+CREATE INDEX idx_payments_user_id ON payments(user_id);
 ```
 
 ---
 
 ### **2. Creación de la tabla `payment_items`**
 ```sql
-CREATE TABLE `payment_items` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `payment_id` BIGINT NOT NULL,
-  `book_isbn` VARCHAR(255) NOT NULL,
-  `quantity` INT NOT NULL,
-  `price_per_unit` DOUBLE NOT NULL,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `idx_payment_items_isbn` (`book_isbn`),
-  KEY `fk_payment_id` (`payment_id`),
-  CONSTRAINT `fk_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `chk_price_per_unit` CHECK ((`price_per_unit` > 0)),
-  CONSTRAINT `chk_quantity` CHECK ((`quantity` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE payment_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    payment_id BIGINT NOT NULL,
+    book_isbn VARCHAR(20) NOT NULL,
+    quantity INT NOT NULL,
+    price_per_unit DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE,
+    CONSTRAINT chk_quantity CHECK (quantity > 0),
+    CONSTRAINT chk_price_per_unit CHECK (price_per_unit > 0)
+);
+-- Índice para búsquedas rápidas por ISBN
+CREATE INDEX idx_payment_items_isbn ON payment_items(book_isbn);
 ```
 
 ---
@@ -190,7 +190,6 @@ VALUES
 ('user_9', 225.50, 'PENDING', NOW(), NOW(), NOW()),
 ('user_10', 350.00, 'CANCELLED', NOW(), NOW(), NOW());
 ```
-
 ---
 
 ### **2. Población de la tabla `payment_items`**
@@ -207,6 +206,7 @@ VALUES
 (4, '9780060850524', 1, 10.50, NOW()),  -- Brave New World (Payment 4)
 (5, '9781400079988', 1, 18.75, NOW()),  -- War and Peace (Payment 5)
 (5, '9780143058144', 2, 16.00, NOW());  -- Crime and Punishment (Payment 5)
+
 ```
 
 ---
